@@ -7,7 +7,9 @@ add_library(tape_lib
 )
 
 add_executable(YADRO-test-task 
-src/main.cpp
+    src/main.cpp
+    src/sorter.h
+    src/sorter.cpp
 )
 
 target_link_libraries(YADRO-test-task 
