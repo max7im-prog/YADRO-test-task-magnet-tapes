@@ -3,10 +3,15 @@
 #include <vector>
 #include <list>
 #include <fstream>
+#include <thread>
 
 Tape::Tape(Tape &&other) noexcept
     : tape(std::move(other.tape)),
-      length(other.length) {}
+      length(other.length),
+      readDelay(other.readDelay),
+      writeDelay(other.writeDelay),
+      moveDelay(other.moveDelay),
+      rewindDelay(other.rewindDelay) {}
 
 Tape &Tape::operator=(Tape &&other) noexcept
 {
@@ -19,7 +24,10 @@ Tape &Tape::operator=(Tape &&other) noexcept
 }
 
 // Opens a tape from a tape file
-Tape::Tape(std::string fileName)
+Tape::Tape(std::string fileName, TapeConfig config) : readDelay(config.readDelay),
+                                                      writeDelay(config.writeDelay),
+                                                      moveDelay(config.moveDelay),
+                                                      rewindDelay(config.rewindDelay)
 {
     if (!std::filesystem::exists(fileName))
     {
@@ -49,25 +57,18 @@ Tape::~Tape()
 // Returns true if successfully moved the head, false otherwise
 bool Tape::move(int offset)
 {
+    std::this_thread::sleep_for(moveDelay);
     std::streamoff pos = static_cast<std::streamoff>(this->tape.tellg());
     std::streamoff delta = static_cast<std::streamoff>(offset) * sizeof(int32_t);
     std::streamoff newPos = pos + delta;
 
-    if (newPos < 0 || newPos >= this->length* sizeof(int32_t))
+    if (newPos < 0 || newPos >= this->length * sizeof(int32_t))
     {
         return false;
     }
 
-    // std::streamoff g_before = this->tape.tellg();
-    // std::streamoff p_before = this->tape.tellp();
-
     this->tape.seekg(newPos);
     this->tape.seekp(newPos);
-
-    // std::streamoff g_after = this->tape.tellg();
-    // std::streamoff p_after = this->tape.tellp();
-    // std::cout << "tellg: " << g << " tellp: " << p << std::endl;
-    
 
     return true;
 }
@@ -76,6 +77,7 @@ bool Tape::move(int offset)
 // Throws std::ios_base::failure on failure
 int32_t Tape::read()
 {
+    std::this_thread::sleep_for(readDelay);
     int32_t value = 0;
     std::streampos currentPos = this->tape.tellg();
 
@@ -96,6 +98,7 @@ int32_t Tape::read()
 // Returns true if wrote successfully, false otherwise
 bool Tape::write(int32_t value)
 {
+    std::this_thread::sleep_for(writeDelay);
     auto currentPos = this->tape.tellp();
 
     this->tape.write(reinterpret_cast<char *>(&value), sizeof(int32_t));
@@ -116,14 +119,18 @@ bool Tape::write(int32_t value)
 // Moves the head back to the start of the tape
 bool Tape::rewind()
 {
-    this->tape.seekg(0);
-    this->tape.seekp(0);
+    if (this->tape.tellg() != 0)
+    {
+        std::this_thread::sleep_for(rewindDelay);
+        this->tape.seekg(0);
+        this->tape.seekp(0);
+    }
     return true;
 }
 
 // Generates a tape of a certain size by creating a file and filling it with "0", returns a new Tape object
 // Throws on failure
-Tape Tape::generateTape(const std::string &fileName, int size)
+Tape Tape::generateTape(const std::string &fileName, int size, TapeConfig config)
 {
     std::ofstream file(fileName, std::ios::binary | std::ios::out | std::ios::trunc);
 
@@ -153,29 +160,34 @@ Tape Tape::generateTape(const std::string &fileName, int size)
 
     file.close();
 
-    return Tape(fileName);
+    return Tape(fileName, config);
 }
 
 // Throws on failure
-Tape Tape::tapeFromTXT(const std::string &txtFile, const std::string &tapeFile)
+Tape Tape::tapeFromTXT(const std::string &txtFile, const std::string &tapeFile, TapeConfig config)
 {
     std::ifstream file(txtFile);
-    if (!file) {
+    if (!file)
+    {
         throw std::ios_base::failure("failed to open " + txtFile);
     }
 
-    Tape ret = Tape::generateTape(tapeFile, 0);
+    Tape ret = Tape::generateTape(tapeFile, 0, config);
     std::string line;
     int32_t val;
     int size = 0;
 
-    while (std::getline(file, line)) {
-        try {
+    while (std::getline(file, line))
+    {
+        try
+        {
             val = std::stoi(line);
-        } catch (...) {
+        }
+        catch (...)
+        {
             throw std::invalid_argument("Invalid integer in line: " + line);
         }
-        ret.tape.write(reinterpret_cast<char*>(&val), sizeof(int32_t));
+        ret.tape.write(reinterpret_cast<char *>(&val), sizeof(int32_t));
         size++;
     }
 
@@ -188,15 +200,17 @@ Tape Tape::tapeFromTXT(const std::string &txtFile, const std::string &tapeFile)
 
 void Tape::writeTapeToTXT(Tape &tape, const std::string &txtFile)
 {
-    std::ofstream file(txtFile,std::ios::trunc);
-    if(!file){
+    std::ofstream file(txtFile, std::ios::trunc);
+    if (!file)
+    {
         throw std::ios_base::failure("failed to open output file: " + txtFile);
     }
 
     tape.rewind();
-    do{
+    do
+    {
         file << std::to_string(tape.read()) << std::endl;
-    }while(tape.move(1));
+    } while (tape.move(1));
 
     tape.rewind();
 }
@@ -205,3 +219,5 @@ int Tape::getLength()
 {
     return this->length;
 }
+
+

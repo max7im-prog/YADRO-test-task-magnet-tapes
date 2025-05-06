@@ -60,8 +60,9 @@ void Sorter::mergeSortedTapes(std::vector<Tape> &tapes, Tape &outputTape)
 }
 
 // Throws if failed to create a working directory
-Sorter::Sorter(std::string workingDir, int memorySize = 1024) : workingDir(workingDir),
-                                                                memorySize(memorySize)
+Sorter::Sorter(std::string workingDir, int memorySize,  TapeConfig config) : workingDir(workingDir),
+                                                                memorySize(memorySize),
+                                                                tapeConfig(config)
 {
     if (!std::filesystem::exists(workingDir))
     {
@@ -101,7 +102,7 @@ void Sorter::sort(Tape &inputTape, Tape &outputTape)
 
         // Create a new tape and write sorted data into it
         std::string newTapeName = this->workingDir + "/temp" + std::to_string(tapeNum);
-        Tape newTape = Tape::generateTape(newTapeName, elementsRead);
+        Tape newTape = Tape::generateTape(newTapeName, elementsRead,this->tapeConfig);
 
         int pos = 0;
         do

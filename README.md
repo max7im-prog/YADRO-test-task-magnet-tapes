@@ -9,7 +9,7 @@ This project implements an **external merge sort algorithm** for sorting large d
 ├── src/                # Source code (.cpp/.h files)
 ├── test/               # Tests
 ├── CMakeLists.txt      # CMake configuration
-└── README.md           # This file
+└── README.md           
 ```
 
 ## 🛠 Build Instructions
@@ -45,7 +45,7 @@ build/YADRO-test-task
 ### Run the program:
 
 ```bash
-./YADRO-test-task <input_txt_file> <output_txt_file>
+./YADRO-test-task <input_txt_file> <output_txt_file> <configuration file>
 ```
 
 Example:
@@ -56,7 +56,7 @@ Example:
 
 The program uses a temporary directory at `./build/tmp` to store intermediate tape files.
 
-## 🧪 Test Case Format
+## 🧪 Input file Format
 
 Each input `.txt` file should contain one integer per line. For example:
 
@@ -68,6 +68,18 @@ Each input `.txt` file should contain one integer per line. For example:
 2
 ```
 
+## 🧪 Configuration file Format
+
+Each configuration file should contain 5 key:value pairs. Values of delays are in milliseconds, value of memory size is in bytes.
+
+```
+memorySize=1024
+readDelay=0
+writeDelay=0
+moveDelay=0
+rewindDelay=0
+```
+
 ## 📝 Notes
 
 - The `Sorter` class uses a configurable memory buffer to perform partial sorts.
@@ -76,4 +88,4 @@ Each input `.txt` file should contain one integer per line. For example:
 
 ## 📄 License
 
-MIT License (or specify your own)
+MIT License

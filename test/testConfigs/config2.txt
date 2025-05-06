@@ -1,0 +1,5 @@
+memorySize=1024
+readDelay=0
+writeDelay=0
+moveDelay=0
+rewindDelay=0

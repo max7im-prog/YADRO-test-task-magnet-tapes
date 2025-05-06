@@ -11,10 +11,11 @@ private:
     const int memorySize; // Size in bytes
     std::vector<int32_t> memory;
     std::vector<Tape> tapes;
+    const TapeConfig tapeConfig;
 
     void mergeSortedTapes(std::vector<Tape> &tapes, Tape& outputTape);
 public:
-    Sorter(std::string workingDir, int memorySize);
+    Sorter(std::string workingDir, int memorySize, TapeConfig config);
     void sort(Tape& inputTape, Tape& outputTape);
 };
 
