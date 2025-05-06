@@ -8,16 +8,11 @@ This project implements an **external merge sort** to sort large data stored on 
 
 ```
 .
-├── build/                  # CMake build artifacts (created after building)
 ├── src/                   # Main source files
-│   ├── main.cpp           # Entry point
-│   ├── sorter.cpp/.h      # Sorter logic
-│   ├── tape.cpp/.h        # Tape abstraction and I/O delays
-├── test/
-│   └── testcases/         # Input test case files
+├── test/                  # Tests
 ├── external/googleTests/  # Google Test submodule
 ├── CMakeLists.txt         # Build configuration
-└── README.md              # This file
+└── README.md              
 ```
 
 ---
@@ -107,7 +102,6 @@ Tests are written using Google Test and can be run as follows:
 ./tests_runner
 ```
 
-To add more test cases, place them under `test/testcases/` and update `test_basic.cpp`.
 
 ---
 
