@@ -18,6 +18,7 @@ public:
     bool move(int offset);
     int32_t read();
     bool write(int32_t value);
+    bool rewind();
     static Tape generateTape(const std::string &fileName, int size);
     static Tape tapeFromTXT(const std::string &txtFile, const std::string &tapeFile);
 

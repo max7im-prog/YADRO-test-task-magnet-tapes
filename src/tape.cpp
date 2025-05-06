@@ -103,11 +103,21 @@ bool Tape::write(int32_t value)
     if (!this->tape)
     {
         this->tape.seekp(currentPos);
+        this->tape.seekg(currentPos);
         return false;
     }
 
     this->tape.seekp(currentPos);
+    this->tape.seekg(currentPos);
 
+    return true;
+}
+
+// Moves the head back to the start of the tape
+bool Tape::rewind()
+{
+    this->tape.seekg(0);
+    this->tape.seekp(0);
     return true;
 }
 
