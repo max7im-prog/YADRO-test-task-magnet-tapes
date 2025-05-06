@@ -117,36 +117,4 @@ TEST(TapeTest, MoveTest) {
     EXPECT_EQ(tape.read(), testData[0]);
 }
 
-// TEST(SorterTest, SortTest) {
-//     // TapeConfig with small delays for testing
-//     TapeConfig config{
-//         std::chrono::milliseconds(50),
-//         std::chrono::milliseconds(50),
-//         std::chrono::milliseconds(50),
-//         std::chrono::milliseconds(50)
-//     };
-
-//     // Create a dummy input tape with unsorted data
-//     std::string inputFile = "input_tape.dat";
-//     std::vector<int32_t> unsortedData = {5, 1, 4, 2, 3};
-//     createDummyTapeFile(inputFile, unsortedData);
-
-//     // Create Tape objects
-//     Tape inputTape(inputFile, config);
-//     std::string outputFile = "output_tape.dat";
-//     Tape outputTape(outputFile, config);
-
-//     // Create a Sorter object and sort the data
-//     Sorter sorter("working_dir", 1024, config);
-//     sorter.sort(inputTape, outputTape);
-
-//     // Read and verify the sorted data
-//     outputTape.rewind();
-//     std::vector<int32_t> sortedData = {1, 2, 3, 4, 5};
-//     for (size_t i = 0; i < sortedData.size(); ++i) {
-//         EXPECT_EQ(outputTape.read(), sortedData[i]);
-//         outputTape.move(1);
-//     }
-// }
-
 

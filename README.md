@@ -58,7 +58,7 @@ Executables will be located in the `build/` directory:
 Example:
 
 ```bash
-./YADRO-test-task ../test/testcases/input.txt ./output.txt ../test/testcases/config.txt
+./YADRO-test-task ../test/testcases/case1.txt ./output.txt ../test/testConfigs/config1.txt
 ```
 
 Intermediate tape files will be stored in `./build/tmp/`.
