@@ -13,8 +13,8 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    std::string inFile = argv[1];
-    std::string outFile = argv[2];
+    std::string inFileName = argv[1];
+    std::string outFileName = argv[2];
 
     if (!std::filesystem::exists(workindDir))
     {
@@ -22,24 +22,11 @@ int main(int argc, char **argv)
             ;
     }
 
-    Tape inTape = Tape::tapeFromTXT(inFile, workindDir + "/input");
+    Tape inTape = Tape::tapeFromTXT(inFileName, workindDir + "/input");
     Tape outTape = Tape::generateTape(workindDir + "/output", inTape.getLength());
 
     Sorter sorter(workindDir + "/sorter", 16);
     sorter.sort(inTape, outTape);
-
-    std::cout << "input:" << std::endl;
-    do
-    {
-        std::cout << inTape.read() << " ";
-    } while (inTape.move(1));
-    inTape.rewind();
-    std::cout << std::endl;
-    std::cout << "output:" << std::endl;
-    do
-    {
-        std::cout << outTape.read() << " ";
-    } while (outTape.move(1));
-    outTape.rewind();
-    std::cout << std::endl;
+    
+    Tape::writeTapeToTXT(outTape,outFileName);
 }

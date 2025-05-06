@@ -186,6 +186,20 @@ Tape Tape::tapeFromTXT(const std::string &txtFile, const std::string &tapeFile)
     return ret;
 }
 
+void Tape::writeTapeToTXT(Tape &tape, const std::string &txtFile)
+{
+    std::ofstream file(txtFile,std::ios::trunc);
+    if(!file){
+        throw std::ios_base::failure("failed to open output file: " + txtFile);
+    }
+
+    tape.rewind();
+    do{
+        file << std::to_string(tape.read()) << std::endl;
+    }while(tape.move(1));
+
+    tape.rewind();
+}
 
 int Tape::getLength()
 {

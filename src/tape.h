@@ -21,6 +21,7 @@ public:
     bool rewind();
     static Tape generateTape(const std::string &fileName, int size);
     static Tape tapeFromTXT(const std::string &txtFile, const std::string &tapeFile);
+    static void writeTapeToTXT(Tape& tape, const std::string &txtFile);
 
     int getLength();
     
