@@ -1,64 +1,80 @@
 # YADRO Magnet Tape Sorter
 
-This project implements an **external merge sort algorithm** for sorting large datasets stored on virtual magnetic tapes. It is designed to handle data sizes that exceed available memory, using temporary tapes to facilitate sorting.
+This project implements an **external merge sort** to sort large data stored on virtual magnetic tapes. It mimics the behavior of physical tape drives by introducing configurable delays for read, write, move, and rewind operations.
+
+---
 
 ## 📁 Project Structure
 
 ```
 .
-├── src/                # Source code (.cpp/.h files)
-├── test/               # Tests
-├── CMakeLists.txt      # CMake configuration
-└── README.md           
+├── build/                  # CMake build artifacts (created after building)
+├── src/                   # Main source files
+│   ├── main.cpp           # Entry point
+│   ├── sorter.cpp/.h      # Sorter logic
+│   ├── tape.cpp/.h        # Tape abstraction and I/O delays
+├── test/
+│   └── testcases/         # Input test case files
+├── external/googleTests/  # Google Test submodule
+├── CMakeLists.txt         # Build configuration
+└── README.md              # This file
 ```
+
+---
 
 ## 🛠 Build Instructions
 
-### Requirements
-- CMake (version 3.10+ recommended)
-- C++17 compatible compiler (e.g. `g++` or `clang++`)
+### 🔧 Requirements
 
-### Build Steps
+- CMake ≥ 3.10
+- C++17-compatible compiler (e.g., `g++`, `clang++`)
+- Git (for cloning submodules)
+
+### 🧱 Build Steps
 
 ```bash
-# Clone and enter the project
-git clone https://github.com/max7im-prog/YADRO-test-task-magnet-tapes
+# Clone repository with submodules
+git clone --recurse-submodules https://github.com/max7im-prog/YADRO-test-task-magnet-tapes
 cd YADRO-test-task-magnet-tapes
 
-# Create and enter the build directory
+# Create build directory and navigate into it
 mkdir -p build && cd build
 
-# Generate build files
-cmake -DCMAKE_BUILD_TYPE=Debug ..
+# Generate build files with CMake
+cmake -DCMAKE_BUILD_TYPE=Release ..
 
-# Compile
+# Build the project
 cmake --build .
 ```
 
-The executable will be created as:
-```
-build/YADRO-test-task
-```
+Executables will be located in the `build/` directory:
+
+- `YADRO-test-task` – main application
+- `tests_runner` – Google Test executable
+
+---
 
 ## 🚀 Usage
 
-### Run the program:
-
 ```bash
-./YADRO-test-task <input_txt_file> <output_txt_file> <configuration file>
+./YADRO-test-task <input_txt_file> <output_txt_file> <config_file>
 ```
 
 Example:
 
 ```bash
-./YADRO-test-task ../test/testcases/case1.txt ./output.txt ../test/testConfigs/config1.txt 
+./YADRO-test-task ../test/testcases/input.txt ./output.txt ../test/testcases/config.txt
 ```
 
-The program uses a temporary directory at `./build/tmp` to store intermediate tape files.
+Intermediate tape files will be stored in `./build/tmp/`.
 
-## 🧪 Input file Format
+---
 
-Each input `.txt` file should contain one integer per line. For example:
+## 📂 Input and Configuration Files
+
+### ✅ Input File Format
+
+Each line should contain a single signed 32-bit integer:
 
 ```
 5
@@ -68,24 +84,41 @@ Each input `.txt` file should contain one integer per line. For example:
 2
 ```
 
-## 🔧 Configuration file Format
-
-Each configuration file should contain 5 key:value pairs. Values of delays are in milliseconds, value of memory size is in bytes.
+### ⚙️ Configuration File Format
 
 ```
 memorySize=1024
-readDelay=0
-writeDelay=0
-moveDelay=0
-rewindDelay=0
+readDelay=5
+writeDelay=5
+moveDelay=10
+rewindDelay=20
 ```
+
+- `memorySize`: memory buffer size in **bytes**
+- All delays are in **milliseconds**
+
+---
+
+## ✅ Running Tests
+
+Tests are written using Google Test and can be run as follows:
+
+```bash
+./tests_runner
+```
+
+To add more test cases, place them under `test/testcases/` and update `test_basic.cpp`.
+
+---
 
 ## 📝 Notes
 
-- The `Sorter` class uses a configurable memory buffer to perform partial sorts.
-- Intermediate sorted chunks are written to temporary tapes and then merged into the output tape.
-- Make sure to clean the `tmp/` directory before each run if needed.
+- Sorting is done using an external merge sort with tape-based I/O simulation.
+- The sorter splits input into memory-sized chunks, sorts each chunk in memory, and writes them to temporary tapes.
+- Temporary files are stored in `./build/tmp/`. Delete or clear this folder between runs if needed.
+
+---
 
 ## 📄 License
 
-MIT License
+MIT License – use freely for educational and professional purposes.
