@@ -51,7 +51,7 @@ build/YADRO-test-task
 Example:
 
 ```bash
-./YADRO-test-task ../test/testcases/case1.txt ./output.txt
+./YADRO-test-task ../test/testcases/case1.txt ./output.txt ../test/testConfigs/config1.txt 
 ```
 
 The program uses a temporary directory at `./build/tmp` to store intermediate tape files.
@@ -68,7 +68,7 @@ Each input `.txt` file should contain one integer per line. For example:
 2
 ```
 
-## 🧪 Configuration file Format
+## 🔧 Configuration file Format
 
 Each configuration file should contain 5 key:value pairs. Values of delays are in milliseconds, value of memory size is in bytes.
 
